@@ -72,7 +72,12 @@ export function TradeTerminal({ symbol }: { symbol: string }) {
   }, [pushToast, symbol]);
 
   useEffect(() => {
-    const wsBase = process.env.NEXT_PUBLIC_WS_URL ?? 'ws://localhost:3001/ws';
+    const wsBase = process.env.NEXT_PUBLIC_WS_URL;
+    if (!wsBase) {
+      setConnectionState('closed');
+      return;
+    }
+
     const wsUrl = new URL(wsBase);
     wsUrl.searchParams.set('channel', `market:${symbol}`);
 
